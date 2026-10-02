@@ -1,0 +1,1 @@
+.hero img,.pic img,.detail img{width:100%;height:100%;object-fit:cover;display:block}.hero,.pic,.detail{overflow:hidden}.store .hero img{object-position:center}.item .pic img{object-position:center}.detail img{object-position:center}@media(max-width:720px){.store .hero{aspect-ratio:1.18/1}.store .hero img{object-fit:cover}}

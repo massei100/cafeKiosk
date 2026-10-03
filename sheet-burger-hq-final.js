@@ -1,0 +1,1 @@
+window.SHEETS=window.SHEETS||{};window.SHEETS.burger='data:image/webp;base64,'+(window.SHEET_PARTS.burger||[]).join('');

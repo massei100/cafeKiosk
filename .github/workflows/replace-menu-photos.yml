@@ -1,6 +1,9 @@
 name: Replace menu photos with real food photography
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/replace-menu-photos.yml']
 permissions:
   contents: write
 jobs:

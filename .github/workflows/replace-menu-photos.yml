@@ -17,36 +17,41 @@ jobs:
       - name: Fetch real menu photographs from Wikimedia Commons
         run: |
           cat > /tmp/photos.py <<'PY'
-          import os, requests, io, time
-          from PIL import Image,ImageOps,UnidentifiedImageError
+          import os, requests, io, time, re
+          from PIL import Image,ImageOps
           items={
-          'cafe_americano.webp':'Americano coffee','cafe_cafelatte.webp':'caffe latte','cafe_vanillalatte.webp':'vanilla latte','cafe_caramelmacchiato.webp':'caramel macchiato','cafe_cafemocha.webp':'cafe mocha','cafe_einspanner.webp':'Vienna coffee cream','cafe_strawberrysmoothie.webp':'strawberry smoothie','cafe_mangosmoothie.webp':'mango smoothie','cafe_blueberrysmoothie.webp':'blueberry smoothie','cafe_yogurtsmoothie.webp':'yogurt smoothie','cafe_lemontea.webp':'lemon tea','cafe_grapefruittea.webp':'grapefruit tea','cafe_greentealatte.webp':'matcha latte','cafe_chocolatelatte.webp':'hot chocolate','cafe_lemonade.webp':'lemonade drink','cafe_grapefruitade.webp':'grapefruit soda drink','cafe_softicecream.webp':'soft serve ice cream',
-          'burger_bulgogiburger.webp':'bulgogi burger','burger_cheeseburger.webp':'cheeseburger','burger_doublecheeseburger.webp':'double cheeseburger','burger_baconburger.webp':'bacon cheeseburger','burger_chickenburger.webp':'chicken burger','burger_shrimpburger.webp':'shrimp burger','burger_bulgogiset.webp':'hamburger french fries soda meal','burger_cheeseburgerset.webp':'cheeseburger fries soda meal','burger_frenchfries.webp':'french fries','burger_onionrings.webp':'onion rings food','burger_cheesesticks.webp':'mozzarella sticks','burger_chickennuggets.webp':'chicken nuggets','burger_cola.webp':'cola glass','burger_cider.webp':'lemon lime soda glass','burger_softicecream.webp':'soft serve ice cream',
-          'bunsik_tteokbokki.webp':'tteokbokki','bunsik_cheesetteokbokki.webp':'cheese tteokbokki','bunsik_rosetteokbokki.webp':'rose tteokbokki','bunsik_rabokki.webp':'rabokki','bunsik_gimbap.webp':'gimbap','bunsik_tunagimbap.webp':'tuna gimbap','bunsik_cheesegimbap.webp':'cheese gimbap','bunsik_porkcutletgimbap.webp':'pork cutlet gimbap','bunsik_assortedtempura.webp':'Korean twigim fried food','bunsik_gimmari.webp':'gimmari fried seaweed roll','bunsik_squidtempura.webp':'fried squid tempura','bunsik_vegetabletempura.webp':'vegetable tempura','bunsik_ramen.webp':'Korean ramyeon','bunsik_jjolmyeon.webp':'jjolmyeon','bunsik_udon.webp':'udon noodles','bunsik_cola.webp':'cola glass','bunsik_cider.webp':'lemon lime soda glass'}
-          api='https://commons.wikimedia.org/w/api.php'; headers={'User-Agent':'CafeKioskEducation/1.1 (educational kiosk)'}
-          os.makedirs('assets-final',exist_ok=True); done=0
-          for fn,q in items.items():
-            params={'action':'query','generator':'search','gsrsearch':q,'gsrnamespace':6,'gsrlimit':20,'prop':'imageinfo','iiprop':'url|size|mime','iiurlwidth':1600,'format':'json'}
-            try: data=requests.get(api,params=params,headers=headers,timeout=30).json()
-            except Exception as e: print('SEARCH ERROR',fn,e); continue
-            pages=list(data.get('query',{}).get('pages',{}).values()); candidates=[]
-            for p in pages:
-              ii=(p.get('imageinfo') or [{}])[0]; w=ii.get('width',0); h=ii.get('height',0); u=ii.get('thumburl') or ii.get('url'); mime=ii.get('mime','')
-              if u and mime.startswith('image/') and w>=700 and h>=500: candidates.append((w*h,u,p.get('title','')))
-            candidates.sort(reverse=True)
-            saved=False
-            for _,url,title in candidates:
+          'cafe_americano.webp':('Americano coffee',['americano']), 'cafe_cafelatte.webp':('caffe latte',['latte']), 'cafe_vanillalatte.webp':('vanilla latte',['vanilla','latte']), 'cafe_caramelmacchiato.webp':('caramel macchiato',['caramel','macchiato']), 'cafe_cafemocha.webp':('cafe mocha',['mocha']), 'cafe_einspanner.webp':('Einspanner coffee',['einspanner','vienna coffee']), 'cafe_strawberrysmoothie.webp':('strawberry smoothie',['strawberry','smoothie']), 'cafe_mangosmoothie.webp':('mango smoothie',['mango','smoothie']), 'cafe_blueberrysmoothie.webp':('blueberry smoothie',['blueberry','smoothie','berry smoothie']), 'cafe_yogurtsmoothie.webp':('yogurt smoothie',['yogurt','smoothie']), 'cafe_lemontea.webp':('lemon tea',['lemon','tea']), 'cafe_grapefruittea.webp':('grapefruit tea',['grapefruit']), 'cafe_greentealatte.webp':('matcha latte',['matcha','latte']), 'cafe_chocolatelatte.webp':('hot chocolate',['chocolate']), 'cafe_lemonade.webp':('lemonade',['lemonade']), 'cafe_grapefruitade.webp':('grapefruit drink',['grapefruit']), 'cafe_softicecream.webp':('soft serve ice cream',['soft serve']),
+          'burger_bulgogiburger.webp':('bulgogi burger',['bulgogi']), 'burger_cheeseburger.webp':('cheeseburger',['cheeseburger']), 'burger_doublecheeseburger.webp':('double cheeseburger',['double','cheeseburger']), 'burger_baconburger.webp':('bacon cheeseburger',['bacon','burger']), 'burger_chickenburger.webp':('chicken burger',['chicken','burger']), 'burger_shrimpburger.webp':('shrimp burger',['shrimp','burger']), 'burger_bulgogiset.webp':('hamburger fries soda meal',['burger','fries']), 'burger_cheeseburgerset.webp':('cheeseburger fries meal',['cheeseburger','fries']), 'burger_frenchfries.webp':('french fries',['fries']), 'burger_onionrings.webp':('onion rings',['onion','rings']), 'burger_cheesesticks.webp':('mozzarella sticks',['mozzarella','sticks']), 'burger_chickennuggets.webp':('chicken nuggets',['nuggets']), 'burger_cola.webp':('cola drink',['cola']), 'burger_cider.webp':('lemon lime soda',['lemon','lime','soda']), 'burger_softicecream.webp':('soft serve ice cream',['soft serve']),
+          'bunsik_tteokbokki.webp':('tteokbokki',['tteokbokki']), 'bunsik_cheesetteokbokki.webp':('cheese tteokbokki',['tteokbokki']), 'bunsik_rosetteokbokki.webp':('rose tteokbokki',['tteokbokki']), 'bunsik_rabokki.webp':('rabokki',['rabokki']), 'bunsik_gimbap.webp':('gimbap',['gimbap','kimbap']), 'bunsik_tunagimbap.webp':('tuna gimbap',['gimbap','kimbap']), 'bunsik_cheesegimbap.webp':('cheese gimbap',['gimbap','kimbap']), 'bunsik_porkcutletgimbap.webp':('pork cutlet gimbap',['gimbap','kimbap']), 'bunsik_assortedtempura.webp':('Korean twigim',['twigim','tempura']), 'bunsik_gimmari.webp':('gimmari',['gimmari']), 'bunsik_squidtempura.webp':('squid tempura',['squid','tempura']), 'bunsik_vegetabletempura.webp':('vegetable tempura',['vegetable','tempura']), 'bunsik_ramen.webp':('Korean ramyeon',['ramyeon','ramen']), 'bunsik_jjolmyeon.webp':('jjolmyeon',['jjolmyeon']), 'bunsik_udon.webp':('udon',['udon']), 'bunsik_cola.webp':('cola drink',['cola']), 'bunsik_cider.webp':('lemon lime soda',['lemon','lime','soda'])}
+          api='https://commons.wikimedia.org/w/api.php'; headers={'User-Agent':'CafeKioskEducation/1.2 (educational project; polite throttling)'}; s=requests.Session(); s.headers.update(headers)
+          def get_json(params):
+            for wait in (1,2,4,8):
               try:
-                r=requests.get(url,headers=headers,timeout=60); r.raise_for_status()
-                if not r.headers.get('content-type','').lower().startswith('image/'): continue
-                im=Image.open(io.BytesIO(r.content)); im.load(); im=im.convert('RGB')
-                im=ImageOps.fit(im,(1200,900),method=Image.Resampling.LANCZOS,centering=(.5,.5)); im.save('assets-final/'+fn,'WEBP',quality=88,method=6)
-                print('SAVED',fn,'<-',title); done+=1; saved=True; break
-              except Exception as e: print('SKIP',fn,title,type(e).__name__)
-            if not saved: print('NO USABLE PHOTO',fn,q)
-            time.sleep(.1)
-          print('TOTAL SAVED',done,'OF',len(items))
-          if done < 35: raise SystemExit('Too few valid photographs downloaded; refusing partial replacement')
+                r=s.get(api,params=params,timeout=30)
+                if r.status_code in (429,503): time.sleep(wait); continue
+                r.raise_for_status(); return r.json()
+              except Exception: time.sleep(wait)
+            return {}
+          os.makedirs('assets-final',exist_ok=True); done=0; failed=[]
+          for fn,(q,words) in items.items():
+            params={'action':'query','generator':'search','gsrsearch':q+' filetype:bitmap','gsrnamespace':6,'gsrlimit':12,'prop':'imageinfo','iiprop':'url|size|mime','iiurlwidth':1400,'format':'json','formatversion':2,'maxlag':5}
+            pages=get_json(params).get('query',{}).get('pages',[]); candidates=[]
+            for p in pages:
+              title=p.get('title','').lower(); ii=(p.get('imageinfo') or [{}])[0]; u=ii.get('thumburl') or ii.get('url'); mime=ii.get('mime',''); w=ii.get('width',0); h=ii.get('height',0)
+              score=sum(1 for x in words if x in title)
+              if u and mime.startswith('image/') and w>=650 and h>=450 and score: candidates.append((score,w*h,u,p.get('title','')))
+            candidates.sort(reverse=True); saved=False
+            for score,_,url,title in candidates:
+              try:
+                r=s.get(url,timeout=60); r.raise_for_status()
+                if not r.headers.get('content-type','').startswith('image/'): continue
+                im=Image.open(io.BytesIO(r.content)); im.load(); im=ImageOps.fit(im.convert('RGB'),(1200,900),Image.Resampling.LANCZOS)
+                im.save('assets-final/'+fn,'WEBP',quality=90,method=6); print('SAVED',fn,'<-',title); done+=1; saved=True; break
+              except Exception as e: print('SKIP',fn,type(e).__name__)
+            if not saved: failed.append(fn); print('FAILED',fn)
+            time.sleep(1.1)
+          print('TOTAL',done,'OF',len(items),'FAILED',','.join(failed))
+          if failed: raise SystemExit('Not committing partial/unverified photo set')
           PY
           python /tmp/photos.py
       - name: Commit real photo assets
@@ -55,5 +60,5 @@ jobs:
           git config user.email github-actions@github.com
           git add assets-final
           git diff --cached --quiet && exit 0
-          git commit -m "Replace kiosk menu assets with real food photographs"
+          git commit -m "Replace all kiosk menu assets with verified real food photographs"
           git push

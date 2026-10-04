@@ -1,0 +1,32 @@
+Verified/replaced this run: 19
+Unresolved: 30
+cafe_yogurtsmoothie.webp
+cafe_lemontea.webp
+cafe_grapefruittea.webp
+cafe_greentealatte.webp
+cafe_chocolatelatte.webp
+cafe_lemonade.webp
+cafe_grapefruitade.webp
+cafe_softicecream.webp
+burger_bulgogiburger.webp
+burger_cheeseburger.webp
+burger_cola.webp
+burger_cider.webp
+burger_softicecream.webp
+bunsik_tteokbokki.webp
+bunsik_cheesetteokbokki.webp
+bunsik_rosetteokbokki.webp
+bunsik_rabokki.webp
+bunsik_gimbap.webp
+bunsik_tunagimbap.webp
+bunsik_cheesegimbap.webp
+bunsik_porkcutletgimbap.webp
+bunsik_assortedtempura.webp
+bunsik_gimmari.webp
+bunsik_squidtempura.webp
+bunsik_vegetabletempura.webp
+bunsik_ramen.webp
+bunsik_jjolmyeon.webp
+bunsik_udon.webp
+bunsik_cola.webp
+bunsik_cider.webp

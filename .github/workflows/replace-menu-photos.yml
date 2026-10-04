@@ -18,25 +18,35 @@ jobs:
         run: |
           cat > /tmp/photos.py <<'PY'
           import os, requests, io, time
-          from PIL import Image,ImageOps
+          from PIL import Image,ImageOps,UnidentifiedImageError
           items={
-          'cafe_americano.webp':'Americano coffee photograph','cafe_cafelatte.webp':'caffe latte coffee photograph','cafe_vanillalatte.webp':'vanilla latte coffee photograph','cafe_caramelmacchiato.webp':'caramel macchiato coffee photograph','cafe_cafemocha.webp':'cafe mocha coffee photograph','cafe_einspanner.webp':'Einspanner coffee Vienna photograph','cafe_strawberrysmoothie.webp':'strawberry smoothie photograph','cafe_mangosmoothie.webp':'mango smoothie photograph','cafe_blueberrysmoothie.webp':'blueberry smoothie photograph','cafe_yogurtsmoothie.webp':'yogurt smoothie photograph','cafe_lemontea.webp':'lemon tea photograph','cafe_grapefruittea.webp':'grapefruit tea photograph','cafe_greentealatte.webp':'matcha latte photograph','cafe_chocolatelatte.webp':'hot chocolate latte photograph','cafe_lemonade.webp':'lemonade glass photograph','cafe_grapefruitade.webp':'grapefruit soda drink photograph','cafe_softicecream.webp':'soft serve ice cream photograph',
-          'burger_bulgogiburger.webp':'bulgogi burger Korean photograph','burger_cheeseburger.webp':'cheeseburger photograph','burger_doublecheeseburger.webp':'double cheeseburger photograph','burger_baconburger.webp':'bacon cheeseburger photograph','burger_chickenburger.webp':'chicken burger photograph','burger_shrimpburger.webp':'shrimp burger photograph','burger_bulgogiset.webp':'burger french fries soda meal photograph','burger_cheeseburgerset.webp':'cheeseburger french fries soda meal photograph','burger_frenchfries.webp':'french fries photograph','burger_onionrings.webp':'onion rings food photograph','burger_cheesesticks.webp':'mozzarella sticks photograph','burger_chickennuggets.webp':'chicken nuggets photograph','burger_cola.webp':'cola glass photograph','burger_cider.webp':'lemon lime soda glass photograph','burger_softicecream.webp':'soft serve ice cream photograph',
-          'bunsik_tteokbokki.webp':'tteokbokki Korean food photograph','bunsik_cheesetteokbokki.webp':'cheese tteokbokki photograph','bunsik_rosetteokbokki.webp':'cream rose tteokbokki photograph','bunsik_rabokki.webp':'rabokki Korean food photograph','bunsik_gimbap.webp':'gimbap Korean food photograph','bunsik_tunagimbap.webp':'tuna gimbap photograph','bunsik_cheesegimbap.webp':'cheese gimbap Korean photograph','bunsik_porkcutletgimbap.webp':'pork cutlet gimbap photograph','bunsik_assortedtempura.webp':'Korean assorted twigim fried food photograph','bunsik_gimmari.webp':'gimmari Korean fried seaweed roll photograph','bunsik_squidtempura.webp':'fried squid tempura photograph','bunsik_vegetabletempura.webp':'vegetable tempura photograph','bunsik_ramen.webp':'Korean ramyeon noodles photograph','bunsik_jjolmyeon.webp':'jjolmyeon Korean noodles photograph','bunsik_udon.webp':'udon noodles photograph','bunsik_cola.webp':'cola glass photograph','bunsik_cider.webp':'lemon lime soda glass photograph'}
-          api='https://commons.wikimedia.org/w/api.php'; headers={'User-Agent':'CafeKioskEducation/1.0'}
-          os.makedirs('assets-final',exist_ok=True)
+          'cafe_americano.webp':'Americano coffee','cafe_cafelatte.webp':'caffe latte','cafe_vanillalatte.webp':'vanilla latte','cafe_caramelmacchiato.webp':'caramel macchiato','cafe_cafemocha.webp':'cafe mocha','cafe_einspanner.webp':'Vienna coffee cream','cafe_strawberrysmoothie.webp':'strawberry smoothie','cafe_mangosmoothie.webp':'mango smoothie','cafe_blueberrysmoothie.webp':'blueberry smoothie','cafe_yogurtsmoothie.webp':'yogurt smoothie','cafe_lemontea.webp':'lemon tea','cafe_grapefruittea.webp':'grapefruit tea','cafe_greentealatte.webp':'matcha latte','cafe_chocolatelatte.webp':'hot chocolate','cafe_lemonade.webp':'lemonade drink','cafe_grapefruitade.webp':'grapefruit soda drink','cafe_softicecream.webp':'soft serve ice cream',
+          'burger_bulgogiburger.webp':'bulgogi burger','burger_cheeseburger.webp':'cheeseburger','burger_doublecheeseburger.webp':'double cheeseburger','burger_baconburger.webp':'bacon cheeseburger','burger_chickenburger.webp':'chicken burger','burger_shrimpburger.webp':'shrimp burger','burger_bulgogiset.webp':'hamburger french fries soda meal','burger_cheeseburgerset.webp':'cheeseburger fries soda meal','burger_frenchfries.webp':'french fries','burger_onionrings.webp':'onion rings food','burger_cheesesticks.webp':'mozzarella sticks','burger_chickennuggets.webp':'chicken nuggets','burger_cola.webp':'cola glass','burger_cider.webp':'lemon lime soda glass','burger_softicecream.webp':'soft serve ice cream',
+          'bunsik_tteokbokki.webp':'tteokbokki','bunsik_cheesetteokbokki.webp':'cheese tteokbokki','bunsik_rosetteokbokki.webp':'rose tteokbokki','bunsik_rabokki.webp':'rabokki','bunsik_gimbap.webp':'gimbap','bunsik_tunagimbap.webp':'tuna gimbap','bunsik_cheesegimbap.webp':'cheese gimbap','bunsik_porkcutletgimbap.webp':'pork cutlet gimbap','bunsik_assortedtempura.webp':'Korean twigim fried food','bunsik_gimmari.webp':'gimmari fried seaweed roll','bunsik_squidtempura.webp':'fried squid tempura','bunsik_vegetabletempura.webp':'vegetable tempura','bunsik_ramen.webp':'Korean ramyeon','bunsik_jjolmyeon.webp':'jjolmyeon','bunsik_udon.webp':'udon noodles','bunsik_cola.webp':'cola glass','bunsik_cider.webp':'lemon lime soda glass'}
+          api='https://commons.wikimedia.org/w/api.php'; headers={'User-Agent':'CafeKioskEducation/1.1 (educational kiosk)'}
+          os.makedirs('assets-final',exist_ok=True); done=0
           for fn,q in items.items():
-            params={'action':'query','generator':'search','gsrsearch':q+' filetype:bitmap','gsrnamespace':6,'gsrlimit':10,'prop':'imageinfo','iiprop':'url|size|mime','format':'json','origin':'*'}
-            data=requests.get(api,params=params,headers=headers,timeout=30).json(); pages=list(data.get('query',{}).get('pages',{}).values())
-            cand=[]
+            params={'action':'query','generator':'search','gsrsearch':q,'gsrnamespace':6,'gsrlimit':20,'prop':'imageinfo','iiprop':'url|size|mime','iiurlwidth':1600,'format':'json'}
+            try: data=requests.get(api,params=params,headers=headers,timeout=30).json()
+            except Exception as e: print('SEARCH ERROR',fn,e); continue
+            pages=list(data.get('query',{}).get('pages',{}).values()); candidates=[]
             for p in pages:
-              ii=(p.get('imageinfo') or [{}])[0]; mime=ii.get('mime',''); w=ii.get('width',0); h=ii.get('height',0); u=ii.get('url')
-              if u and mime in ('image/jpeg','image/png') and w>=700 and h>=500: cand.append((w*h,u,p.get('title','')))
-            if not cand: print('NO PHOTO',fn,q); continue
-            cand.sort(reverse=True); _,url,title=cand[0]
-            raw=requests.get(url,headers=headers,timeout=60).content
-            im=Image.open(io.BytesIO(raw)).convert('RGB'); im=ImageOps.fit(im,(1200,900),method=Image.Resampling.LANCZOS,centering=(.5,.5)); im.save('assets-final/'+fn,'WEBP',quality=88,method=6)
-            print(fn,'<-',title); time.sleep(.15)
+              ii=(p.get('imageinfo') or [{}])[0]; w=ii.get('width',0); h=ii.get('height',0); u=ii.get('thumburl') or ii.get('url'); mime=ii.get('mime','')
+              if u and mime.startswith('image/') and w>=700 and h>=500: candidates.append((w*h,u,p.get('title','')))
+            candidates.sort(reverse=True)
+            saved=False
+            for _,url,title in candidates:
+              try:
+                r=requests.get(url,headers=headers,timeout=60); r.raise_for_status()
+                if not r.headers.get('content-type','').lower().startswith('image/'): continue
+                im=Image.open(io.BytesIO(r.content)); im.load(); im=im.convert('RGB')
+                im=ImageOps.fit(im,(1200,900),method=Image.Resampling.LANCZOS,centering=(.5,.5)); im.save('assets-final/'+fn,'WEBP',quality=88,method=6)
+                print('SAVED',fn,'<-',title); done+=1; saved=True; break
+              except Exception as e: print('SKIP',fn,title,type(e).__name__)
+            if not saved: print('NO USABLE PHOTO',fn,q)
+            time.sleep(.1)
+          print('TOTAL SAVED',done,'OF',len(items))
+          if done < 35: raise SystemExit('Too few valid photographs downloaded; refusing partial replacement')
           PY
           python /tmp/photos.py
       - name: Commit real photo assets

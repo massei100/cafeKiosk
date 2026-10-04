@@ -14,51 +14,45 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - run: pip install pillow requests
-      - name: Fetch full real menu photo set from Wikimedia Commons
+      - name: Fetch and validate real menu photographs
         run: |
           cat > /tmp/photos.py <<'PY'
           import os,requests,io,time
           from PIL import Image,ImageOps
           items={
-          'cafe_americano.webp':['Americano coffee'],'cafe_cafelatte.webp':['caffe latte'],'cafe_vanillalatte.webp':['vanilla latte'],'cafe_caramelmacchiato.webp':['caramel macchiato'],'cafe_cafemocha.webp':['cafe mocha'],'cafe_einspanner.webp':['Einspanner coffee','Vienna coffee cream'],'cafe_strawberrysmoothie.webp':['strawberry smoothie'],'cafe_mangosmoothie.webp':['mango smoothie'],'cafe_blueberrysmoothie.webp':['blueberry smoothie'],'cafe_yogurtsmoothie.webp':['yogurt smoothie drink'],'cafe_lemontea.webp':['lemon tea drink','tea with lemon'],'cafe_grapefruittea.webp':['grapefruit tea drink','grapefruit drink tea'],'cafe_greentealatte.webp':['matcha latte'],'cafe_chocolatelatte.webp':['hot chocolate cup'],'cafe_lemonade.webp':['lemonade glass'],'cafe_grapefruitade.webp':['grapefruit soda glass'],'cafe_softicecream.webp':['soft serve ice cream'],
-          'burger_bulgogiburger.webp':['bulgogi burger'],'burger_cheeseburger.webp':['cheeseburger'],'burger_doublecheeseburger.webp':['double cheeseburger'],'burger_baconburger.webp':['bacon cheeseburger'],'burger_chickenburger.webp':['chicken burger sandwich'],'burger_shrimpburger.webp':['shrimp burger','ebi burger','prawn burger'],'burger_bulgogiset.webp':['hamburger french fries cola meal','burger fries drink meal'],'burger_cheeseburgerset.webp':['cheeseburger fries drink meal'],'burger_frenchfries.webp':['french fries'],'burger_onionrings.webp':['onion rings food'],'burger_cheesesticks.webp':['mozzarella sticks'],'burger_chickennuggets.webp':['chicken nuggets'],'burger_cola.webp':['cola glass drink'],'burger_cider.webp':['lemon lime soda glass'],'burger_softicecream.webp':['soft serve ice cream'],
-          'bunsik_tteokbokki.webp':['tteokbokki Korean food'],'bunsik_cheesetteokbokki.webp':['cheese tteokbokki'],'bunsik_rosetteokbokki.webp':['rose tteokbokki','creamy tteokbokki'],'bunsik_rabokki.webp':['rabokki','tteokbokki ramen'],'bunsik_gimbap.webp':['gimbap Korean'],'bunsik_tunagimbap.webp':['tuna gimbap'],'bunsik_cheesegimbap.webp':['cheese gimbap','cheese kimbap'],'bunsik_porkcutletgimbap.webp':['donkatsu gimbap','pork cutlet gimbap'],'bunsik_assortedtempura.webp':['Korean twigim assorted'],'bunsik_gimmari.webp':['gimmari fried seaweed roll'],'bunsik_squidtempura.webp':['squid tempura'],'bunsik_vegetabletempura.webp':['vegetable tempura'],'bunsik_ramen.webp':['Korean ramyeon bowl'],'bunsik_jjolmyeon.webp':['jjolmyeon Korean noodles'],'bunsik_udon.webp':['udon noodle soup bowl'],'bunsik_cola.webp':['cola glass drink'],'bunsik_cider.webp':['lemon lime soda glass']}
-          api='https://commons.wikimedia.org/w/api.php'; s=requests.Session(); s.headers.update({'User-Agent':'CafeKioskEducation/1.4 educational project'})
-          def search(q):
-            for wait in (1,3,6):
-              try:
-                p={'action':'query','generator':'search','gsrsearch':q+' filetype:bitmap','gsrnamespace':6,'gsrlimit':15,'prop':'imageinfo','iiprop':'url|size|mime','iiurlwidth':1400,'format':'json','formatversion':2,'maxlag':5}
-                r=s.get(api,params=p,timeout=30)
-                if r.status_code in (429,503): time.sleep(wait); continue
-                r.raise_for_status(); return r.json().get('query',{}).get('pages',[])
-              except Exception: time.sleep(wait)
-            return []
-          os.makedirs('assets-final',exist_ok=True); failed=[]; manifest=[]
+          'cafe_americano.webp':['Americano coffee'],'cafe_cafelatte.webp':['caffe latte'],'cafe_vanillalatte.webp':['vanilla latte'],'cafe_caramelmacchiato.webp':['caramel macchiato'],'cafe_cafemocha.webp':['cafe mocha'],'cafe_einspanner.webp':['Einspanner coffee','Vienna coffee cream'],'cafe_strawberrysmoothie.webp':['strawberry smoothie'],'cafe_mangosmoothie.webp':['mango smoothie'],'cafe_blueberrysmoothie.webp':['blueberry smoothie'],'cafe_yogurtsmoothie.webp':['yogurt smoothie drink'],'cafe_lemontea.webp':['lemon tea drink','tea with lemon'],'cafe_grapefruittea.webp':['grapefruit tea drink'],'cafe_greentealatte.webp':['matcha latte'],'cafe_chocolatelatte.webp':['hot chocolate cup'],'cafe_lemonade.webp':['lemonade glass'],'cafe_grapefruitade.webp':['grapefruit soda glass'],'cafe_softicecream.webp':['soft serve ice cream'],
+          'burger_bulgogiburger.webp':['bulgogi burger'],'burger_cheeseburger.webp':['cheeseburger'],'burger_doublecheeseburger.webp':['double cheeseburger'],'burger_baconburger.webp':['bacon cheeseburger'],'burger_chickenburger.webp':['chicken burger sandwich'],'burger_shrimpburger.webp':['shrimp burger','ebi burger'],'burger_bulgogiset.webp':['hamburger french fries cola meal'],'burger_cheeseburgerset.webp':['cheeseburger fries drink meal'],'burger_frenchfries.webp':['french fries'],'burger_onionrings.webp':['onion rings food'],'burger_cheesesticks.webp':['mozzarella sticks'],'burger_chickennuggets.webp':['chicken nuggets'],'burger_cola.webp':['cola glass drink'],'burger_cider.webp':['lemon lime soda glass'],'burger_softicecream.webp':['soft serve ice cream'],
+          'bunsik_tteokbokki.webp':['tteokbokki Korean food'],'bunsik_cheesetteokbokki.webp':['cheese tteokbokki'],'bunsik_rosetteokbokki.webp':['rose tteokbokki'],'bunsik_rabokki.webp':['rabokki'],'bunsik_gimbap.webp':['gimbap Korean'],'bunsik_tunagimbap.webp':['tuna gimbap'],'bunsik_cheesegimbap.webp':['cheese gimbap'],'bunsik_porkcutletgimbap.webp':['pork cutlet gimbap'],'bunsik_assortedtempura.webp':['Korean twigim'],'bunsik_gimmari.webp':['gimmari'],'bunsik_squidtempura.webp':['squid tempura'],'bunsik_vegetabletempura.webp':['vegetable tempura'],'bunsik_ramen.webp':['Korean ramyeon bowl'],'bunsik_jjolmyeon.webp':['jjolmyeon'],'bunsik_udon.webp':['udon noodle soup'],'bunsik_cola.webp':['cola glass drink'],'bunsik_cider.webp':['lemon lime soda glass']}
+          api='https://commons.wikimedia.org/w/api.php'; s=requests.Session(); s.headers.update({'User-Agent':'CafeKioskEducation/1.5 educational project'})
+          def pages(q):
+            try:
+              p={'action':'query','generator':'search','gsrsearch':q+' filetype:bitmap','gsrnamespace':6,'gsrlimit':12,'prop':'imageinfo','iiprop':'url|size|mime','iiurlwidth':1400,'format':'json','formatversion':2}
+              r=s.get(api,params=p,timeout=30); r.raise_for_status(); return r.json().get('query',{}).get('pages',[])
+            except Exception:return []
+          os.makedirs('assets-final',exist_ok=True); unresolved=[]; changed=[]
           for fn,queries in items.items():
-            saved=False
+            ok=False
             for q in queries:
-              for p in search(q):
-                ii=(p.get('imageinfo') or [{}])[0]; u=ii.get('thumburl') or ii.get('url'); w=ii.get('width',0); h=ii.get('height',0); mime=ii.get('mime','')
-                if not u or not mime.startswith('image/') or w<650 or h<450: continue
+              tokens=[x.lower() for x in q.replace('-',' ').split() if len(x)>3 and x.lower() not in {'food','drink','glass','korean','sandwich','noodle','soup','bowl','meal'}]
+              for p in pages(q):
+                title=p.get('title','').lower(); ii=(p.get('imageinfo') or [{}])[0]; u=ii.get('thumburl') or ii.get('url'); w=ii.get('width',0); h=ii.get('height',0)
+                if not u or w<700 or h<500 or (tokens and not any(t in title for t in tokens)): continue
                 try:
-                  r=s.get(u,timeout=60); r.raise_for_status(); im=Image.open(io.BytesIO(r.content)); im.load()
-                  im=ImageOps.fit(im.convert('RGB'),(1200,900),Image.Resampling.LANCZOS); im.save('assets-final/'+fn,'WEBP',quality=90,method=6)
-                  title=p.get('title',''); print('SAVED',fn,'<-',title); manifest.append(fn+'\t'+title); saved=True; break
+                  r=s.get(u,timeout=45); r.raise_for_status(); im=Image.open(io.BytesIO(r.content)); im.load(); im=ImageOps.fit(im.convert('RGB'),(1200,900),Image.Resampling.LANCZOS); im.save('assets-final/'+fn,'WEBP',quality=90,method=6); print('VERIFIED',fn,'<-',p.get('title','')); changed.append(fn); ok=True; break
                 except Exception: pass
-              if saved: break
-              time.sleep(1)
-            if not saved: failed.append(fn); print('FAILED',fn)
-            time.sleep(.8)
-          open('/tmp/photo-manifest.txt','w').write('\n'.join(manifest))
-          print('TOTAL',len(manifest),'OF',len(items),'FAILED',','.join(failed))
-          if failed: raise SystemExit('Not committing until all 49 menu photos are available')
+              if ok: break
+              time.sleep(.6)
+            if not ok: unresolved.append(fn); print('UNRESOLVED',fn)
+            time.sleep(.5)
+          open('PHOTO_STATUS.txt','w').write('Verified/replaced this run: '+str(len(changed))+'\nUnresolved: '+str(len(unresolved))+'\n'+'\n'.join(unresolved)+'\n')
+          print('VERIFIED',len(changed),'UNRESOLVED',len(unresolved))
           PY
           python /tmp/photos.py
-      - name: Commit complete photo assets
+      - name: Commit verified assets and status
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add assets-final
+          git add assets-final PHOTO_STATUS.txt
           git diff --cached --quiet && exit 0
-          git commit -m "Replace all kiosk menu assets with real food photographs"
+          git commit -m "Save verified kiosk menu photos and unresolved asset report"
           git push

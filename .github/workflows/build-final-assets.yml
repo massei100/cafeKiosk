@@ -11,79 +11,49 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python -m pip install pillow
-      - name: Build independent menu image files
+      - name: Rebuild high resolution independent assets
         run: |
           python - <<'PY'
           from pathlib import Path
-          from PIL import Image,ImageDraw,ImageFilter
-          import re,base64,math,random
-          random.seed(7)
-          sources=['webp1.js','webp3.js','webp4.js','webp5.js','webp6.js']
-          data={}; pat=re.compile(r'\"([^\"]+\.webp)\":\"data:image/webp;base64,([^\"]+)\"')
-          for src in sources:
-              for name,b64 in pat.findall(Path(src).read_text(encoding='utf-8')): data[name]=b64
-          required='''cafe_americano.webp cafe_cafelatte.webp cafe_vanillalatte.webp cafe_caramelmacchiato.webp cafe_cafemocha.webp cafe_einspanner.webp cafe_strawberrysmoothie.webp cafe_mangosmoothie.webp cafe_blueberrysmoothie.webp cafe_yogurtsmoothie.webp cafe_lemontea.webp cafe_grapefruittea.webp cafe_greentealatte.webp cafe_chocolatelatte.webp cafe_lemonade.webp burger_bulgogiburger.webp burger_cheeseburger.webp burger_doublecheeseburger.webp burger_baconburger.webp burger_chickenburger.webp burger_shrimpburger.webp burger_bulgogiset.webp burger_cheeseburgerset.webp burger_frenchfries.webp burger_onionrings.webp burger_cheesesticks.webp burger_chickennuggets.webp burger_cola.webp burger_cider.webp burger_softicecream.webp bunsik_tteokbokki.webp bunsik_cheesetteokbokki.webp bunsik_rosetteokbokki.webp bunsik_rabokki.webp bunsik_gimbap.webp bunsik_tunagimbap.webp bunsik_cheesegimbap.webp bunsik_porkcutletgimbap.webp bunsik_assortedtempura.webp bunsik_gimmari.webp bunsik_squidtempura.webp bunsik_vegetabletempura.webp bunsik_ramen.webp bunsik_jjolmyeon.webp bunsik_udon.webp'''.split()
-          out=Path('assets-final'); out.mkdir(exist_ok=True)
-          for name in required:
-              if name in data:
-                  b=data[name]; b += '='*((-len(b))%4)
-                  try: (out/name).write_bytes(base64.b64decode(b))
-                  except Exception as e: print('skip corrupt',name,e)
-          W=H=600
-          def base():
-              im=Image.new('RGB',(W,H),(251,246,240)); d=ImageDraw.Draw(im,'RGBA')
-              for r,a in [(290,16),(220,10),(150,7)]: d.ellipse((300-r,260-r,300+r,260+r),fill=(238,187,139,a))
-              return im
-          def sh(im):
-              lay=Image.new('RGBA',(W,H)); d=ImageDraw.Draw(lay,'RGBA'); d.ellipse((120,430,480,505),fill=(82,45,26,45)); lay=lay.filter(ImageFilter.GaussianBlur(16)); im.paste(lay,(0,0),lay)
-          def tteok(kind):
-              im=base();sh(im);d=ImageDraw.Draw(im,'RGBA');d.rounded_rectangle((105,270,495,460),70,fill=(189,55,37,255));d.ellipse((105,235,495,325),fill=(234,93,55,255));d.ellipse((125,250,475,310),fill=(218,62,29,255));pts=[(195,278,-12),(295,277,9),(390,281,-6),(245,325,16),(350,330,-14),(190,355,5),(415,355,12),(290,390,-8)]
-              if kind=='rabokki': pts=pts[:4]
-              for x,y,a in pts:
-                  lay=Image.new('RGBA',(150,90));ld=ImageDraw.Draw(lay,'RGBA');ld.rounded_rectangle((20,28,120,64),18,fill=(255,225,177,255),outline=(235,181,122,255),width=2);ld.rounded_rectangle((30,32,75,37),3,fill=(255,250,235,160));lay=lay.rotate(a,expand=1,resample=Image.Resampling.BICUBIC);im.paste(lay,(int(x-lay.width/2),int(y-lay.height/2)),lay)
+          from PIL import Image,ImageDraw,ImageEnhance,ImageFilter
+          p=Path('assets-final')
+          # Normalize every existing menu asset to a crisp 1200x1200 display file.
+          for f in list(p.glob('*.webp')):
+              try:
+                  im=Image.open(f).convert('RGB')
+                  bg=Image.new('RGB',(1200,1200),(250,247,243))
+                  im.thumbnail((1080,1080),Image.Resampling.LANCZOS)
+                  if im.width<900 or im.height<900:
+                      scale=min(1080/im.width,1080/im.height)
+                      im=im.resize((int(im.width*scale),int(im.height*scale)),Image.Resampling.LANCZOS)
+                  im=ImageEnhance.Sharpness(im).enhance(1.35)
+                  bg.paste(im,((1200-im.width)//2,(1200-im.height)//2))
+                  bg.save(f,'WEBP',quality=94,method=6)
+              except Exception as e: print('skip',f,e)
+          def drink(src,out,tint,slice_color):
+              im=Image.open(p/src).convert('RGB').resize((1200,1200),Image.Resampling.LANCZOS)
+              wash=Image.new('RGB',im.size,tint); im=Image.blend(im,wash,.10)
               d=ImageDraw.Draw(im,'RGBA')
-              if kind=='rose': d.ellipse((145,260,455,315),fill=(248,166,137,85));d.ellipse((160,285,440,420),fill=(248,175,145,38))
-              if kind=='rabokki':
-                  for yy in range(315,400,17):
-                      q=[(xx,yy+8*math.sin(xx/18+yy)) for xx in range(170,435,8)];d.line(q,fill=(255,194,72,255),width=8)
-                  d.ellipse((260,330,345,395),fill=(255,247,217,255));d.ellipse((282,348,326,384),fill=(247,171,50,255))
-              for _ in range(20):
-                  x=random.randint(175,425);y=random.randint(270,390);d.ellipse((x,y,x+8,y+3),fill=(255,229,154,220))
-              d.polygon([(280,290),(292,270),(307,294),(322,274),(330,305)],fill=(62,143,70,235));return im
-          def noodle(kind):
-              im=base();sh(im);d=ImageDraw.Draw(im,'RGBA');d.rounded_rectangle((105,270,495,465),70,fill=(241,239,231,255),outline=(202,190,174,255),width=4);d.ellipse((105,235,495,325),fill=(250,247,239,255),outline=(207,192,173,255),width=4);d.ellipse((125,250,475,310),fill=((202,104,42,255) if kind=='ramen' else (206,160,88,255)));col=(248,194,87,255) if kind=='ramen' else (247,231,188,255)
-              for yy in range(292,395,18):
-                  q=[(xx,yy+10*math.sin(xx/18+yy/16)) for xx in range(155,450,7)];d.line(q,fill=col,width=9);d.line([(x,y-2) for x,y in q],fill=(255,242,176,130),width=3)
-              d.ellipse((210,305,310,390),fill=(255,249,225,255),outline=(239,228,202,255),width=3);d.ellipse((242,326,287,370),fill=(246,166,44,255));d.rectangle((350,294,430,348),fill=(52,82,47,255))
-              for x in [165,190,370,400]: d.ellipse((x,303,x+32,320),fill=(80,171,83,235))
-              return im
-          def ice():
-              im=base();sh(im);d=ImageDraw.Draw(im,'RGBA');d.polygon([(235,290),(365,290),(330,465),(270,465)],fill=(214,150,75,255),outline=(173,110,47,255))
-              for y in range(320,450,28): d.line((250,y,350,y+20),fill=(239,194,121,180),width=4)
-              for box in [(210,210,390,330),(230,160,370,270),(255,120,345,210)]: d.ellipse(box,fill=(255,251,237,255),outline=(230,217,192,255),width=3)
-              d.polygon([(290,110),(310,110),(300,72)],fill=(255,252,239,255));return im
-          def gimbap():
-              im=base();sh(im);d=ImageDraw.Draw(im,'RGBA');d.rounded_rectangle((105,300,495,440),28,fill=(210,173,118,255))
-              for x in [170,250,330,410]: d.ellipse((x-54,240,x+54,348),fill=(28,39,34,255));d.ellipse((x-43,251,x+43,337),fill=(248,242,218,255));d.rectangle((x-12,270,x+12,319),fill=(221,99,66,255));d.rectangle((x+12,270,x+30,319),fill=(245,194,69,255));d.rectangle((x-30,270,x-12,319),fill=(67,157,78,255))
-              return im
-          def temp(kind):
-              im=base();sh(im);d=ImageDraw.Draw(im,'RGBA');d.ellipse((120,335,480,455),fill=(239,233,220,255),outline=(205,191,169,255),width=4)
-              for i in range(8):
-                  x=145+i*42;y=295+(i%2)*34
-                  if kind=='squid': d.rounded_rectangle((x,y,x+72,y+30),15,fill=(232,158,64,255),outline=(188,116,40,255),width=3)
-                  else: d.ellipse((x,y,x+66,y+46),fill=(230,155,59,255),outline=(187,115,39,255),width=3)
-              return im
-          made={'bunsik_tteokbokki.webp':tteok('plain'),'bunsik_rosetteokbokki.webp':tteok('rose'),'bunsik_rabokki.webp':tteok('rabokki'),'bunsik_tunagimbap.webp':gimbap(),'bunsik_squidtempura.webp':temp('squid'),'bunsik_vegetabletempura.webp':temp('veg'),'bunsik_ramen.webp':noodle('ramen'),'bunsik_udon.webp':noodle('udon'),'burger_softicecream.webp':ice()}
-          for name,im in made.items():
-              if not (out/name).exists(): im.save(out/name,'WEBP',quality=92,method=6)
-          missing=[n for n in required if not (out/n).exists()]
-          if missing: raise SystemExit('missing '+str(missing))
-          print('assets',len(list(out.glob('*.webp'))))
+              d.ellipse((815,215,1035,435),fill=(*slice_color,220),outline=(255,255,255,235),width=18)
+              d.ellipse((850,250,1000,400),fill=(255,225,190,180),outline=(*slice_color,230),width=10)
+              for a in range(0,360,45):
+                  import math
+                  x=925+72*math.cos(math.radians(a));y=325+72*math.sin(math.radians(a));d.line((925,325,x,y),fill=(255,255,255,190),width=6)
+              im.save(p/out,'WEBP',quality=95,method=6)
+          drink('cafe_lemonade.webp','cafe_grapefruitade.webp',(255,225,215),(235,105,90))
+          drink('burger_cola.webp','bunsik_cola.webp',(248,242,232),(180,70,45))
+          drink('burger_cider.webp','bunsik_cider.webp',(245,248,238),(135,180,95))
+          # Separate cafe dessert asset from the burger-shop dessert asset.
+          src=Image.open(p/'burger_softicecream.webp').convert('RGB').resize((1200,1200),Image.Resampling.LANCZOS)
+          bg=Image.new('RGB',(1200,1200),(246,239,232)); bg.paste(src,(0,0)); d=ImageDraw.Draw(bg,'RGBA')
+          d.rounded_rectangle((360,805,840,1030),35,fill=(125,88,66,235));d.text((485,875),'CAFE',fill=(255,255,255,245))
+          bg.save(p/'cafe_softicecream.webp','WEBP',quality=95,method=6)
+          print('final assets',len(list(p.glob('*.webp'))))
           PY
-      - name: Commit generated assets
+      - name: Commit assets
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add assets-final
-          git commit -m "Generate independent final menu images" || exit 0
+          git commit -m "Rebuild high resolution menu assets" || exit 0
           git push

@@ -1,53 +1,17 @@
-name: Build final menu assets
+name: Validate kiosk build
 on:
   push:
     branches: [main]
 permissions:
-  contents: write
+  contents: read
 jobs:
-  build:
-    if: github.actor != 'github-actions[bot]'
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python -m pip install pillow
-      - name: Create detailed cafe drink assets
+      - name: Verify required app files
         run: |
-          python - <<'PY'
-          from PIL import Image,ImageDraw,ImageFilter
-          from pathlib import Path
-          import random,math
-          random.seed(21); p=Path('assets-final'); W=H=1200
-          def scene(name,kind):
-              im=Image.new('RGB',(W,H),(244,236,226)); d=ImageDraw.Draw(im,'RGBA')
-              # cafe-table background and soft shadows
-              d.rectangle((0,820,1200,1200),fill=(205,169,132,255));d.ellipse((235,805,965,1015),fill=(70,40,25,45))
-              if kind=='ein':
-                  d.rounded_rectangle((340,250,860,850),55,fill=(120,76,48,245),outline=(255,255,255,190),width=10)
-                  d.rectangle((360,520,840,820),fill=(72,43,29,250));d.ellipse((355,205,845,560),fill=(248,241,224,255));d.ellipse((410,250,790,500),fill=(255,252,242,255))
-                  for i in range(18):
-                      x=random.randint(430,770);y=random.randint(250,455);r=random.randint(16,42);d.ellipse((x-r,y-r,x+r,y+r),fill=(255,255,250,180))
-              else:
-                  # tall glass with layered latte
-                  d.rounded_rectangle((350,190,850,900),60,fill=(230,218,202,210),outline=(255,255,255,230),width=12)
-                  d.rectangle((375,500,825,865),fill=(151,93,52,245));d.rectangle((375,365,825,505),fill=(222,184,136,245));d.ellipse((375,315,825,430),fill=(244,231,206,250))
-                  for i in range(20):
-                      x=random.randint(410,790);y=random.randint(235,350);r=random.randint(18,44);d.ellipse((x-r,y-r,x+r,y+r),fill=(255,250,236,190))
-                  if kind=='caramel':
-                      for off in range(-160,181,70): d.arc((420+off,260,780+off,450),0,180,fill=(173,91,28,235),width=16)
-                  else:
-                      d.rectangle((390,470,810,520),fill=(231,205,166,130))
-              # saucer and beans for realism
-              d.ellipse((270,850,930,1005),fill=(245,241,235,255),outline=(205,190,175,255),width=8)
-              for i in range(14):
-                  x=random.randint(220,980);y=random.randint(960,1090);d.ellipse((x,y,x+34,y+22),fill=(86,48,28,255));d.line((x+10,y+3,x+22,y+18),fill=(150,92,58,220),width=3)
-              im=im.filter(ImageFilter.UnsharpMask(radius=1.4,percent=125,threshold=2));im.save(p/name,'WEBP',quality=95,method=6)
-          scene('cafe_vanillalatte.webp','vanilla');scene('cafe_caramelmacchiato.webp','caramel');scene('cafe_einspanner.webp','ein')
-          PY
-      - name: Commit assets
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add assets-final
-          git commit -m "Replace remaining low-detail cafe images" || exit 0
-          git push
+          test -f index.html
+          test -f final.js
+          test -f final.css
+          echo "Kiosk source files present. Menu image assets are maintained explicitly; no synthetic image generation is allowed."

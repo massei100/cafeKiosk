@@ -2,6 +2,7 @@ name: Validate kiosk build
 on:
   push:
     branches: [main]
+  pull_request:
 permissions:
   contents: read
 jobs:
@@ -9,9 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify required app files
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit entry, selectors and preserved photos
         run: |
-          test -f index.html
-          test -f final.js
-          test -f final.css
-          echo "Kiosk source files present. Menu image assets are maintained explicitly; no synthetic image generation is allowed."
+          node --check final.js
+          python3 tests/audit.py
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps chromium --only-shell
+      - name: Verify complete kiosk flow in Chromium
+        run: node tests/kiosk-flow.cjs

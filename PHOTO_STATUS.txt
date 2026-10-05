@@ -1,32 +1,63 @@
-Verified/replaced this run: 19
-Unresolved: 30
-cafe_yogurtsmoothie.webp
-cafe_lemontea.webp
-cafe_grapefruittea.webp
-cafe_greentealatte.webp
-cafe_chocolatelatte.webp
-cafe_lemonade.webp
-cafe_grapefruitade.webp
-cafe_softicecream.webp
-burger_bulgogiburger.webp
-burger_cheeseburger.webp
-burger_cola.webp
-burger_cider.webp
-burger_softicecream.webp
-bunsik_tteokbokki.webp
-bunsik_cheesetteokbokki.webp
-bunsik_rosetteokbokki.webp
-bunsik_rabokki.webp
-bunsik_gimbap.webp
-bunsik_tunagimbap.webp
-bunsik_cheesegimbap.webp
-bunsik_porkcutletgimbap.webp
-bunsik_assortedtempura.webp
-bunsik_gimmari.webp
-bunsik_squidtempura.webp
-bunsik_vegetabletempura.webp
-bunsik_ramen.webp
-bunsik_jjolmyeon.webp
-bunsik_udon.webp
-bunsik_cola.webp
-bunsik_cider.webp
+Photo audit: 2026-10-05
+Base commit: ba10fac5c22beb8f1bac8ec2d4ed0cd025df7681
+Previously verified/replaced: 19 (preserved byte-for-byte; no new semantic review claimed)
+Unresolved photo verification/replacement: 30 (existing files preserved; not substitutes)
+Actually missing referenced files: 0
+
+VERIFIED (19)
+assets-final/burger_baconburger.webp
+assets-final/burger_bulgogiset.webp
+assets-final/burger_cheeseburgerset.webp
+assets-final/burger_cheesesticks.webp
+assets-final/burger_chickenburger.webp
+assets-final/burger_chickennuggets.webp
+assets-final/burger_doublecheeseburger.webp
+assets-final/burger_frenchfries.webp
+assets-final/burger_onionrings.webp
+assets-final/burger_shrimpburger.webp
+assets-final/cafe_americano.webp
+assets-final/cafe_blueberrysmoothie.webp
+assets-final/cafe_cafelatte.webp
+assets-final/cafe_cafemocha.webp
+assets-final/cafe_caramelmacchiato.webp
+assets-final/cafe_einspanner.webp
+assets-final/cafe_mangosmoothie.webp
+assets-final/cafe_strawberrysmoothie.webp
+assets-final/cafe_vanillalatte.webp
+
+UNRESOLVED (30)
+assets-final/bunsik_assortedtempura.webp
+assets-final/bunsik_cheesegimbap.webp
+assets-final/bunsik_cheesetteokbokki.webp
+assets-final/bunsik_cider.webp
+assets-final/bunsik_cola.webp
+assets-final/bunsik_gimbap.webp
+assets-final/bunsik_gimmari.webp
+assets-final/bunsik_jjolmyeon.webp
+assets-final/bunsik_porkcutletgimbap.webp
+assets-final/bunsik_rabokki.webp
+assets-final/bunsik_ramen.webp
+assets-final/bunsik_rosetteokbokki.webp
+assets-final/bunsik_squidtempura.webp
+assets-final/bunsik_tteokbokki.webp
+assets-final/bunsik_tunagimbap.webp
+assets-final/bunsik_udon.webp
+assets-final/bunsik_vegetabletempura.webp
+assets-final/burger_bulgogiburger.webp
+assets-final/burger_cheeseburger.webp
+assets-final/burger_cider.webp
+assets-final/burger_cola.webp
+assets-final/burger_softicecream.webp
+assets-final/cafe_chocolatelatte.webp
+assets-final/cafe_grapefruitade.webp
+assets-final/cafe_grapefruittea.webp
+assets-final/cafe_greentealatte.webp
+assets-final/cafe_lemonade.webp
+assets-final/cafe_lemontea.webp
+assets-final/cafe_softicecream.webp
+assets-final/cafe_yogurtsmoothie.webp
+
+MISSING FILES (0)
+None at the audited commit.
+
+See UNRESOLVED_IMAGES.md for menu mapping and tests/assets-baseline.json for original blob SHAs.

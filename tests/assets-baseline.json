@@ -1,0 +1,198 @@
+{
+  "assets-final/bunsik_assortedtempura.webp": {
+    "sha": "85562aae6fdcee1aae1de3c05d1c71b0cb3d4eb6",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_cheesegimbap.webp": {
+    "sha": "d00a6feed6a08d4968b48bac2936448740bb2275",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_cheesetteokbokki.webp": {
+    "sha": "dd3c1d20268e713ff42a5bb4f73094b0eb828bcb",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_cider.webp": {
+    "sha": "2d4949d276756c6bb04169db4fda946c66b22f82",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_cola.webp": {
+    "sha": "1386c13d80b7b9c97f6c4fa9c35c2c0331d32b01",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_gimbap.webp": {
+    "sha": "7cf053458dc6700947df336f41d9f41c67525815",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_gimmari.webp": {
+    "sha": "960f7953b1f3436e446e9efb6d7932257c39dc38",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_jjolmyeon.webp": {
+    "sha": "a35a77da4e7507ec824918a4832245382c2dee17",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_porkcutletgimbap.webp": {
+    "sha": "5ec7fbad18c290cff0c7f34bb01a7a1361eca33c",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_rabokki.webp": {
+    "sha": "0e5cb3d1311f66592b2c7bba6c739ac82d924e60",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_ramen.webp": {
+    "sha": "62e742b8036ed5cd31ea8946809529608c365ad9",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_rosetteokbokki.webp": {
+    "sha": "40c7fb596aa1fd6a338ea4372eb7ed4c8187b48f",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_squidtempura.webp": {
+    "sha": "e58b5d31a79b63957319fd1929c2314acab0f34c",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_tteokbokki.webp": {
+    "sha": "212ba0db0ad08c2db07bf167466484eae72dc6dd",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_tunagimbap.webp": {
+    "sha": "c76e9cf9e21c7175d9b9a01e77a794671bf50a9b",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_udon.webp": {
+    "sha": "1755c144ddd90624cdda4c898967f3aa39e6a6ab",
+    "status": "unresolved"
+  },
+  "assets-final/bunsik_vegetabletempura.webp": {
+    "sha": "ccce3325238987e0c5dc477eefd3be68227b48a3",
+    "status": "unresolved"
+  },
+  "assets-final/burger_baconburger.webp": {
+    "sha": "4c02e90728c743b3c415c06360387d9a174ed21c",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_bulgogiburger.webp": {
+    "sha": "f1bde988a8a4dcefa7a83c831f86cb2f74316a00",
+    "status": "unresolved"
+  },
+  "assets-final/burger_bulgogiset.webp": {
+    "sha": "5587c5358398a934f843ceeba8f38cd7b27e8f0a",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_cheeseburger.webp": {
+    "sha": "d024fb97b61b1892a3f6f217f8bccb021c0e6521",
+    "status": "unresolved"
+  },
+  "assets-final/burger_cheeseburgerset.webp": {
+    "sha": "73fbb6048d4da158380e75e8c98ec3487bd9b20e",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_cheesesticks.webp": {
+    "sha": "593e0b5a9b1f84479413856fdb3525d60df10f0c",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_chickenburger.webp": {
+    "sha": "ee36c7c163dd445f0ee70585fabf87c21462f2d1",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_chickennuggets.webp": {
+    "sha": "181ef527e1156b24ab8eba92729ecc049a73aef6",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_cider.webp": {
+    "sha": "d1b40c4a5dc16b373ed9fe46968297761f37631b",
+    "status": "unresolved"
+  },
+  "assets-final/burger_cola.webp": {
+    "sha": "ac0075395a338a85c9da5126d89da874a5cf630f",
+    "status": "unresolved"
+  },
+  "assets-final/burger_doublecheeseburger.webp": {
+    "sha": "4c02e90728c743b3c415c06360387d9a174ed21c",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_frenchfries.webp": {
+    "sha": "ac6e2707c24320ebf317fdef48927c2c4203a01c",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_onionrings.webp": {
+    "sha": "24464fd177cc77c28f3099bb51dd83ec15faf56e",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_shrimpburger.webp": {
+    "sha": "e2875372a1d3e4caf0177637d385b7a3467c999f",
+    "status": "previously-verified"
+  },
+  "assets-final/burger_softicecream.webp": {
+    "sha": "596a714cb49dcd05b864061b749e1ed70cfb2e28",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_americano.webp": {
+    "sha": "d10261bc3cf8f2a7352a04d051a607cc791e2ef8",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_blueberrysmoothie.webp": {
+    "sha": "dfa15878a19b267cad7c8c5303f855c9f999c1b8",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_cafelatte.webp": {
+    "sha": "4d79e6f648bf645f7ac6b76f3adba6708736fc24",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_cafemocha.webp": {
+    "sha": "79328dda46be8183870e90a12881e17a24c943c6",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_caramelmacchiato.webp": {
+    "sha": "1ee687fd2e062da0a5d0b6b74448148b8eaf8c03",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_chocolatelatte.webp": {
+    "sha": "99e34ba163e0d0aee0eed83aa23bd187e4c06483",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_einspanner.webp": {
+    "sha": "9f3a178909bfb4d502f0440bbbd2507e7dd26c43",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_grapefruitade.webp": {
+    "sha": "a883233383eef85a6612c692fface190577b9ada",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_grapefruittea.webp": {
+    "sha": "a0a2cbfdb452833052ea2d5d0af4802c12656abd",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_greentealatte.webp": {
+    "sha": "277bda2d60770690537a756154d6b6b053d7d9ad",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_lemonade.webp": {
+    "sha": "61a5fdd4d0af17a6e1eeb7877ff05ea3b32519c6",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_lemontea.webp": {
+    "sha": "a1f09fb1e94b9c1ca784cfcb56a77b23f8b07e13",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_mangosmoothie.webp": {
+    "sha": "309ceb437ec8594812ea96036778134bedc28431",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_softicecream.webp": {
+    "sha": "41286a9306f4d075b0beccd4123e1343b060e29e",
+    "status": "unresolved"
+  },
+  "assets-final/cafe_strawberrysmoothie.webp": {
+    "sha": "ac906cbfd96ed092817a7779c97985d0fa8dd4a8",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_vanillalatte.webp": {
+    "sha": "0ecba5dea7257f1769353679b5a32dd99f3d365e",
+    "status": "previously-verified"
+  },
+  "assets-final/cafe_yogurtsmoothie.webp": {
+    "sha": "41c9d0cdce74e3ddc28df6d7bf994521b5f1eb50",
+    "status": "unresolved"
+  }
+}

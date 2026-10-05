@@ -1,3 +1,6 @@
+// LEGACY ARCHIVE — not loaded by index.html.
+// Incompatible IDs and historical ASSETS mappings: do not use as a deployment entry.
+// Active runtime: final.js; see EXECUTION_AUDIT.md.
 const A=window.ASSETS||{};
 const I=(n,p,img,t=false,s=false)=>({n,p,img,t,s});
 const STORES={
